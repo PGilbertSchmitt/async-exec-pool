@@ -1,0 +1,22 @@
+{
+  "name": "async-exec-pool",
+  "version": "0.0.1",
+  "description": "Concurrent executor for a potentially growing input stream",
+  "main": "dist",
+  "types": "dist",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "module": "",
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "chanty": "^0.0.6"
+  }
+}

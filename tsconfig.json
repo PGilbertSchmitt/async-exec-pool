@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "Node",
+    "lib": [
+      "ES2020"
+    ],
+    "outDir": "./",
+    "rootDir": "./src",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "allowJs": false,
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "removeComments": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": true,
+    "downlevelIteration": true
+  },
+  "include": [
+    "./src/*.ts"
+  ],
+  "exclude": [
+    "./node_modules/"
+  ]
+}
