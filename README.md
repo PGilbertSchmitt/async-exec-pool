@@ -94,10 +94,12 @@ Start the pool's task runner. This will fail if the processor is already running
 
 Push a new task into the queue. If the pool is already running, it will eventually handle the new task too. If the pool was already run and has resolved before `pushTask` was called, then you will have to call `processQueue` again to re-start the pool.
 
+Notice that `pushTask` returns a Promise. This is because all it's doing is calling the queue channel's `put` method internally. The promise returned from this method resolves after the message is taken from the channel, which in the context of the pool means that the task has started being processed by the task runner. Because of this, you should only `await pool.pushTask` when you want to specifically wait for that particular task to finish. Otherwise, if you just want to enqueue another task and keep going, just call it without resolving the Promise.
+
 ### `isIdle: () => boolean`
 
 Check if the pool is currently idle (`true`) or running (`false`).
 
 ### `setConcurrencySize: (concurrencySize: number) => void`
 
-Dynamically change the concurrency level of `processQueue` as it's executing. Seems useful, though I haven't fully tested this one.
+Dynamically change the concurrency level of `processQueue` as it's executing. Seems useful, though I haven't fully tested this being called during the execution process. I feel like based on how I designed the idle checker, it should just work, but I'm not 100% on this one.

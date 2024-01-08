@@ -17,7 +17,7 @@ export class Pool<T> {
   private [WORKERS]: Set<number>;
   private [WAIT]: Promise<void> | null = null;
   private [DONE]: (() => void) | null = null;
-  
+
   constructor(inputs: T[], executor: ExecutorFn<T>) {
     this[EXEC] = executor;
     this[QUEUE] = new Channel();
@@ -26,7 +26,7 @@ export class Pool<T> {
   }
 
   setConcurrencySize = (concurrencySize: number) => { this[SIZE] = concurrencySize };
-  
+
   pushTask = async (task: T) => { await this[QUEUE].put(task); }
 
   isIdle = () =>
@@ -84,7 +84,7 @@ export class Pool<T> {
     }
 
     if (currentWorkerCount === 0) {
-      // We are done executing, so resolve 
+      // We are done executing, so resolve
       const resolve = this[DONE];
 
       // Grow is synchronous, so I think this should not occur, but what do I know?
