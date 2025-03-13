@@ -29,7 +29,7 @@ export class Pool<T> {
 
   pushTask = async (task: T) => { await this[QUEUE].put(task); }
 
-  isIdle = () =>
+  isDone = () =>
     this[QUEUE].sizeMessages() === 0 && this[WORKERS].size === 0;
 
   processQueue = async (concurrency?: number) => {
@@ -60,7 +60,7 @@ export class Pool<T> {
     let currentWorkerCount = 0;
 
     for (let i = 0; i < this[SIZE]; i++) {
-      if (this.isIdle()) {
+      if (this[QUEUE].sizeMessages() === 0) {
         continue;
       }
 
@@ -69,11 +69,11 @@ export class Pool<T> {
       if (!workers.has(i)) {
         // We know for a fact that there are messages in the Channel waiting to be taken.
         // Due to the design of Channel, even though the return of `take` is a promise,
-        // it will synchronously remove the next message, so the message queue size will
-        // shrink synchronously, so even though the `grow` function will continue to exectute
+        // it will synchronously remove the next message, meaning the message queue size will
+        // shrink synchronously. Even though the `grow` function will continue to execute
         // before the promise can resolve, `this.isIdle()` will still work.
+        workers.add(i);
         queue.take().then(async task => {
-          workers.add(i);
           await fn(task);
           workers.delete(i);
 
@@ -84,6 +84,12 @@ export class Pool<T> {
     }
 
     if (currentWorkerCount === 0) {
+      if (!this.isDone()) {
+        // It might be possible for us to hit this point when there's work queued,
+        // so don't resolve, just in case...
+        return;
+      }
+      
       // We are done executing, so resolve
       const resolve = this[DONE];
 

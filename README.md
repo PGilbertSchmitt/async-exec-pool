@@ -29,7 +29,7 @@ import { Pool } from './pool';
 (async () => {
   let i = 1;
   const tasks = [2,4,12,2,4,2,11,4,2,4,2,4];
-  const pool = new Pool(tasks, async (x) => {
+  const pool = new Pool(tasks, async (x: number) => {
     const iter = i++;
     if (x > 10) {
       pool.pushTask(5);
@@ -96,7 +96,7 @@ Push a new task into the queue. If the pool is already running, it will eventual
 
 Notice that `pushTask` returns a Promise. This is because all it's doing is calling the queue channel's `put` method internally. The promise returned from this method resolves after the message is taken from the channel, which in the context of the pool means that the task has started being processed by the task runner. Because of this, you should only `await pool.pushTask` when you want to specifically wait for that particular task to finish. Otherwise, if you just want to enqueue another task and keep going, just call it without resolving the Promise.
 
-### `isIdle: () => boolean`
+### `isDone: () => boolean`
 
 Check if the pool is currently idle (`true`) or running (`false`).
 
